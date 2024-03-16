@@ -27,7 +27,7 @@ const GPTConnector = {
 
   async convertPolicyToRelationalExpression(policyStatement) {
     return this.askGPT(
-      "Give me a relational algebric expression of all the requirement for this plicy to be applicable?\n" +
+      "Give me a algebric expression of all the requirement for this plicy to be applicable using logical operators and variable?\n " +
         policyStatement
     );
   },
@@ -40,7 +40,8 @@ const GPTConnector = {
 
   async isPolicyApplicable(filledPAFormTxt, policyRelationalAlgebra) {
     return this.askGPT(
-      `Evalulate by comparing each part of the policy which ones are applicable which ones are not one by one` +
+      `Evalulate by comparing each part of the policy which ones are applicable which ones are not one by one,` +
+        ` comparision should be text from the policy vs text from the person data applicable write TRUE or FALSE against each comparision ` +
         `given that the provided policy is \n${policyRelationalAlgebra}\n and person  details are ${filledPAFormTxt} `
     );
   },
