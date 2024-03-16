@@ -10,7 +10,7 @@ async function main() {
   console.log({ r });
 }
 
-main();
+main(); // function call for main
 
 async function evalualtePolicy(data) {
   const policyStatement = await PDFService.downloadAndReadPDF({
