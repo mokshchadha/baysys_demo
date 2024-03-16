@@ -6,18 +6,26 @@ const DB = require("./src/data/FileDB");
 async function main() {
   const data = await getFileData();
   const d = data[0];
-  const resp = await PDFService.downloadAndReadPDF({
+  const policyStatement = await PDFService.downloadAndReadPDF({
     url: d.policy,
     type: "policy",
   });
 
-  const relationalAlgerbra = await getRelationalAlgebraForPolicy({
-    policyText: resp,
+  const relationalExpressionForPolicy = await getRelationalAlgebraForPolicy({
+    policyText: policyStatement,
     CPT: d.CPT,
     payer: d.payer,
   });
 
-  console.log({ relationalAlgerbra });
+  const paFormText = await PDFService.downloadAndReadPDF({ url: d.paForm });
+  const filledForm = await GPT.fillFormForPatient(paFormText, d.EHR);
+
+  const finalAnalysis = await GPT.isPolicyApplicable(
+    filledForm,
+    relationalExpressionForPolicy
+  );
+
+  console.log({ finalAnalysis });
 }
 
 main();
@@ -29,7 +37,7 @@ async function getRelationalAlgebraForPolicy({ policyText, CPT, payer }) {
   const uniqId = payer.split(" ").join("_") + "_" + CPT;
   const dataInDB = await DB.get(uniqId);
   if (dataInDB) return dataInDB;
-  const relationalAlgebra = await GPT.convertPolicyToRelationalArgument(
+  const relationalAlgebra = await GPT.convertPolicyToRelationalExpression(
     policyText
   );
   await DB.set(uniqId, relationalAlgebra);
