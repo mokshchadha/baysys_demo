@@ -6,8 +6,10 @@ const DB = require("./src/data/FileDB");
 async function main() {
   const data = await getFileData();
   const d = data[0];
-  const r = await evalualtePolicy(d);
-  console.log({ r });
+  for (const d of data.slice(0, 10)) {
+    const r = await evalualtePolicy(d);
+    console.log({ r });
+  }
 }
 
 main(); // function call for main

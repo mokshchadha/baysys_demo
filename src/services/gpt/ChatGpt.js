@@ -40,8 +40,8 @@ const GPTConnector = {
 
   async isPolicyApplicable(filledPAFormTxt, policyRelationalAlgebra) {
     return this.askGPT(
-      `Evalulate in one word by choosing either applicable, not applicable or missing  information, along with what is missing in case of missing info` +
-        ` wheather the provided policy\n${policyRelationalAlgebra}\n applicable to the person with these details ${filledPAFormTxt}`
+      `Evalulate by comparing each part of the policy which ones are applicable which ones are not one by one` +
+        `given that the provided policy is \n${policyRelationalAlgebra}\n and person  details are ${filledPAFormTxt} `
     );
   },
 };
