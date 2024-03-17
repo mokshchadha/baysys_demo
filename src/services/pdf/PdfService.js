@@ -8,7 +8,7 @@ const PDFService = {
     const response = await fetch(pdfURL);
     const buffer = await response.buffer();
     fs.writeFileSync(outputFilePath, buffer);
-    console.log("PDF downloaded");
+    // console.log("PDF downloaded");
   },
 
   async readPDF(filePath, type) {

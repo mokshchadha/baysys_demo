@@ -6,11 +6,11 @@ const filePath = __dirname + "/" + fileName;
 
 const formatData = function (data) {
   return {
-    payer: data["Payer"],
-    plan: data["Plan"],
+    payer: data["Payer"].trim(),
+    plan: data["Plan"].trim(),
     paForm: data["PA Form"],
     policy: data["Policy"],
-    CPT: data["CPT"],
+    CPT: data["CPT"].trim(),
     caseStatus: data["Case Status"],
     reasonForDecision: data["Reason for Decision"],
     EHR: data["EHR"],

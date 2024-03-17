@@ -1,54 +1,29 @@
 const { getFileData } = require("./src/data/FileData");
-const PDFService = require("./src/services/pdf/PdfService");
-const GPT = require("./src/services/gpt/ChatGpt");
-const DB = require("./src/data/FileDB");
+const { evalualtePolicy } = require("./src/app");
+const mongoDB = require("./src/repo/mongodb");
 
 async function main() {
   const data = await getFileData();
-  const d = data[0];
-  for (const d of data) {
+  await mongoDB.emptyResults();
+  const results = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const d = data[i];
     try {
       const r = await evalualtePolicy(d);
-      console.log({ r });
+      console.log(r);
+      results.push(r);
     } catch (error) {
-      console.error("Could not evaluate for ", JSON.stringify(d));
+      console.error("Error evalualtePolicy() at idx", i);
+      // console.error(error);
     }
   }
+
+  await mongoDB.storeResults(results);
+  const matching = await results.filter(
+    (e) => e.myStatus.toLowerCase() == e.correctStatus.toLowerCase()
+  );
+  console.log({ total: results.length, matching: matching.length });
 }
 
 main(); // function call for main
-
-async function evalualtePolicy(data) {
-  const policyStatement = await PDFService.downloadAndReadPDF({
-    url: data.policy,
-    type: "policy",
-  });
-
-  const relationalExpressionForPolicy = await getRelationalAlgebraForPolicy({
-    policyText: policyStatement,
-    CPT: data.CPT,
-    payer: data.payer,
-  });
-
-  const paFormText = await PDFService.downloadAndReadPDF({ url: data.paForm });
-  const filledForm = await GPT.fillFormForPatient(paFormText, data.EHR);
-
-  const finalAnalysis = await GPT.isPolicyApplicable(
-    filledForm,
-    relationalExpressionForPolicy
-  );
-  return finalAnalysis;
-}
-
-async function getRelationalAlgebraForPolicy({ policyText, CPT, payer }) {
-  //NOTE: this functions checks if we have already computed the relational algebric expression for the payer and CPT
-  // if yes we return it else we ask ChatGPT and return and store it for future use cases
-  const uniqId = payer.split(" ").join("_") + "_" + CPT;
-  const dataInDB = await DB.get(uniqId);
-  if (dataInDB) return dataInDB;
-  const relationalAlgebra = await GPT.convertPolicyToRelationalExpression(
-    policyText
-  );
-  await DB.set(uniqId, relationalAlgebra);
-  return relationalAlgebra;
-}

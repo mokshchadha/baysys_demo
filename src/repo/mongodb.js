@@ -5,10 +5,12 @@ class MongoDBOperations {
   constructor(dbUrl = configs.dbUrl, dbName = configs.dbName) {
     this.dbUrl = dbUrl;
     this.dbName = dbName;
-    this.client = new MongoClient(this.dbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    this.collections = {
+      policiesRelationalExpressions: "policiesRelationalExpressions",
+      PAForm_EHR_Mapping: "PAForm_EHR_Mapping",
+      resultsCollection: "resultsCollection",
+    };
+    this.client = new MongoClient(this.dbUrl, {});
   }
 
   async connect() {
@@ -27,14 +29,53 @@ class MongoDBOperations {
       .findOneAndUpdate(filter, update, options);
   }
 
+  async insertMany(collection, results) {
+    if (!results || results.length === 0) return;
+    if (!this.db) await this.connect();
+    return this.db.collection(collection).insertMany(results);
+  }
+
   async disconnect() {
     await this.client.close();
     console.log("Disconnected from MongoDB");
+  }
+
+  async getPolicyEHRMapping(id) {
+    return await this.db
+      .collection(this.collections.POLICIES_EHR_Mapping)
+      .findOne({ id });
+  }
+
+  async storePolicyEHRMapping(id, mapping) {
+    if (id && mapping)
+      return this.db
+        .collection(this.collections.POLICIES_EHR_Mapping)
+        .insertOne({ id, mapping });
+  }
+
+  async emptyResults() {
+    if (!this.db) await this.connect();
+    return this.db
+      .collection(this.collections.resultsCollection)
+      .deleteMany({});
+  }
+
+  async storeResults(results) {
+    if (!results || results.length === 0) return;
+    if (!this.db) await this.connect();
+    return this.db
+      .collection(this.collections.resultsCollection)
+      .insertMany(results);
+  }
+
+  async find(collection, query = {}) {
+    if (!this.db) await this.connect();
+    return this.db.collection(collection).find(query).toArray();
   }
 }
 
 const instance = new MongoDBOperations();
 
-instance.connect();
+// instance.connect();
 
 module.exports = instance;
