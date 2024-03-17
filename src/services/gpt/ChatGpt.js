@@ -12,13 +12,11 @@ const GPTConnector = {
 
   async askGPT(prompt) {
     try {
-      // console.log(`prompt : ${prompt}`);
       const response = await this.openai.chat.completions.create({
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
       });
       const info = response.choices[0].message.content;
-      // console.log(`reply : ${info}`);
       return info;
     } catch (error) {
       console.error("Error calling the OpenAI API:", error);
@@ -35,6 +33,12 @@ const GPTConnector = {
   async fillFormForPatient(emptyPAFormTxt, EHRInfo) {
     return this.askGPT(
       `Fill this form for me ${emptyPAFormTxt} here are the details ${EHRInfo} `
+    );
+  },
+
+  async convertPolicyDataToJson(policyStatementText) {
+    return this.askGPT(
+      `Given the policy statement as ${policyStatementText}, give me a JSON object with all the possible attributes required for evaluation of the policy`
     );
   },
 
