@@ -32,8 +32,8 @@ async function evalualtePolicy(data) {
     payer: data.payer,
   });
 
-  //   const paFormText = await PDFService.downloadAndReadPDF({ url: data.paForm });
-  //   const filledForm = await GPT.fillFormForPatient(paFormText, data.EHR);
+  const paFormText = await PDFService.downloadAndReadPDF({ url: data.paForm });
+  const filledForm = await GPT.fillFormForPatient(paFormText, data.EHR);
 
   //   const stepByStepAnalysis = await GPT.comparePersonPolicyAndForm(
   //     filledForm,
@@ -41,8 +41,28 @@ async function evalualtePolicy(data) {
   //   );
 
   const finalAnalysis = await GPT.isPolicyApplicableV2(
-    data.EHR,
-    policyStatement,
+    filledForm,
+    relationalExpressionForPolicy,
+    data.additionalInfo
+  );
+
+  return {
+    myStatus: finalAnalysis.status,
+    myReason: finalAnalysis.reason,
+    correctStatus: data.caseStatus,
+    reason: data.reasonForDecision,
+  };
+}
+
+async function evaluatePolicyForPAForm(paFormPDFURL, CPT, payer) {
+  const uniqId = formatUniqId(CPT, payer);
+  const dataInDB = await DB.get(uniqId);
+
+  const paFormText = await PDFService.downloadAndReadPDF({ url: data.paForm });
+
+  const finalAnalysis = await GPT.isPolicyApplicableV2(
+    filledForm,
+    relationalExpressionForPolicy,
     data.additionalInfo
   );
 
