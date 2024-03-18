@@ -1,9 +1,13 @@
+const _ = require("lodash");
 const CUSTOM_ERRORS = require("./errors");
 
 async function routeHandler(req, res, buisnessLogicFn) {
   try {
     const result = await buisnessLogicFn(req);
-    res.status(200).json(result).end();
+    res
+      .status(200)
+      .json(_.omit(result, ["_id"]))
+      .end();
   } catch (error) {
     const customErr = CUSTOM_ERRORS[error.toString()];
     if (customErr) {

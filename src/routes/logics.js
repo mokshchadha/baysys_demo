@@ -58,14 +58,14 @@ async function getPolicyStatementMapping(req) {
   }
   if (text) policyText = text;
 
-  if (!text) throw "Invalid Policy, please add url or text";
+  if (!policyText) throw "Invalid Policy, please add url or text";
 
   const mapping = await GPT.convertPolicyDataToJson(policyText);
   await mongodb.insertOne(mongodb.collections.policyStatementMapping, {
     id,
     mapping,
   });
-  return mapping;
+  return { id, mapping };
 }
 
 async function getRelationalExpression(req) {
@@ -85,14 +85,14 @@ async function getRelationalExpression(req) {
   }
   if (text) policyText = text;
 
-  if (!text) throw "Invalid Policy, please add url or text";
+  if (!policyText) throw "Invalid Policy, please add url or text";
 
   const relation = await GPT.convertPolicyToRelationalExpression(policyText);
-  await mongodb.insertOne(mongodb.collections.policyStatementMapping, {
+  await mongodb.insertOne(mongodb.collections.policiesRelations, {
     id,
     relation,
   });
-  return relation;
+  return { relation, id };
 }
 
 async function getPolicyText(policy) {

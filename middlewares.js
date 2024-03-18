@@ -1,21 +1,16 @@
 const configs = require("./configs");
 
 const authKeyMiddleWare = (req, res, next) => {
-  if (configs.NODE_ENV === "development") {
-    next();
-    return;
-  }
-  if (req.url.includes("webhook")) {
-    //FIXME: remove this for prod
-    next();
-    return;
-  }
+  // if (configs.NODE_ENV === "development") {
+  //   next();
+  //   return;
+  // }
   const authKey = req.headers["auth-key"];
   if (!authKey) {
     console.log("Auth key is missing in headers");
     return res.status(401).json({ error: "Unauthorized: Auth key is missing" });
   }
-  if (authKey !== configs.server.authKey) {
+  if (authKey !== configs.AUTH_KEY) {
     console.log("Auth key is invalid");
     return res.status(401).json({ error: "Unauthorized: Invalid auth key" });
   }

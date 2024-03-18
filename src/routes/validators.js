@@ -1,7 +1,7 @@
 const BODY_ERR = "Invalid request body";
 
 function evaluatePolicyForEndUser(body) {
-  const { CPT, payer, policy, person } = req.body;
+  const { CPT, payer, policy, person } = body;
   if (!CPT || !payer || !policy) throw BODY_ERR;
   const { url, text } = policy;
   if (!url && !text) throw BODY_ERR;

@@ -10,11 +10,11 @@ router.post("/evaluatePolicyForEndUser", (req, res) => {
   res.status(200).send("Policy evaluated");
 });
 
-router.post("/getPolicyStatementMapping", (r, rs) =>
+router.post("/policyStatementMapping", (r, rs) =>
   handler(r, rs, getPolicyStatementMapping)
 );
 
-router.post("/getRelationalExpression", (r, rs) =>
+router.post("/relationalExpressionForPolicy", (r, rs) =>
   handler(r, rs, getRelationalExpression)
 );
 

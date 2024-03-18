@@ -17,10 +17,7 @@ const PDFService = {
       const data = await pdfParse(dataBuffer);
       if (type === "policy") {
         const beforeGuidelines = data.text.split("Policy Guidelines")[0].trim();
-        const afterStatement =
-          "Policy Statement\n" +
-          beforeGuidelines.split("Policy Statement")[1].trim();
-        return afterStatement;
+        return beforeGuidelines;
       }
       return data.text.trim();
     } catch (error) {

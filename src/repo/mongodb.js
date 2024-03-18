@@ -16,11 +16,12 @@ class MongoDBOperations {
 
   async connect() {
     await this.client.connect();
-    console.log("Connected successfully to MongoDB - dbName:", this.dbName);
+    console.log("Connected to MongoDB ");
     this.db = this.client.db(this.dbName);
   }
 
   async findOne(collectionName, query) {
+    if (!this.db) await this.connect();
     return await this.db.collection(collectionName).findOne(query);
   }
 
@@ -30,6 +31,7 @@ class MongoDBOperations {
     update,
     options = { upsert: true }
   ) {
+    if (!this.db) await this.connect();
     return await this.db
       .collection(collectionName)
       .findOneAndUpdate(filter, update, options);
@@ -88,6 +90,6 @@ class MongoDBOperations {
 
 const instance = new MongoDBOperations();
 
-// instance.connect();
+instance.connect();
 
 module.exports = instance;

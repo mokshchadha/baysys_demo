@@ -43,7 +43,7 @@ const GPTConnector = {
 
   async convertPolicyDataToJson(policyStatementText) {
     const jsontxt = await this.askGPT(
-      `Return a JSON mapping of cretierias which are medically necassary for the approval of policy\n` +
+      `Return a JSON mapping of cretieria  which are medically necassary for the approval of policy group them on the basis of the qualities a patient have\n` +
         `Given the policy statement as ${policyStatementText}\n`
     );
     return JSON.parse(jsontxt);
