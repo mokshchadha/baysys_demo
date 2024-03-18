@@ -6,9 +6,10 @@ class MongoDBOperations {
     this.dbUrl = dbUrl;
     this.dbName = dbName;
     this.collections = {
-      policiesRelationalExpressions: "policiesRelationalExpressions",
       PAForm_EHR_Mapping: "PAForm_EHR_Mapping",
       resultsCollection: "resultsCollection",
+      policiesRelations: "policiesRelations",
+      policyStatementMapping: "policyStatementMapping",
     };
     this.client = new MongoClient(this.dbUrl, {});
   }
@@ -23,7 +24,12 @@ class MongoDBOperations {
     return await this.db.collection(collectionName).findOne(query);
   }
 
-  async findOneAndUpdate(collectionName, filter, update, options = {}) {
+  async findOneAndUpdate(
+    collectionName,
+    filter,
+    update,
+    options = { upsert: true }
+  ) {
     return await this.db
       .collection(collectionName)
       .findOneAndUpdate(filter, update, options);
@@ -33,6 +39,12 @@ class MongoDBOperations {
     if (!results || results.length === 0) return;
     if (!this.db) await this.connect();
     return this.db.collection(collection).insertMany(results);
+  }
+
+  async insertOne(collection, result) {
+    if (!result) return;
+    if (!this.db) await this.connect();
+    return this.db.collection(collection).insertOne(result);
   }
 
   async disconnect() {

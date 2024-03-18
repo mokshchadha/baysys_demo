@@ -30,7 +30,7 @@ const GPTConnector = {
           `using the json ${json} and corresponding policy details being ${policyStatement}`
       );
     return this.askGPT(
-      "Give me a algebric expression of all the requirement for this policy to be applicable using logical operators and variables?\n " +
+      "Read the policy statement provided and Give me a algebric expression of all the medically necassary cretieria for this policy to be applicable using logical operators and variables?\n " +
         policyStatement
     );
   },
@@ -42,20 +42,11 @@ const GPTConnector = {
   },
 
   async convertPolicyDataToJson(policyStatementText) {
-    // const idealFormat = {
-    //   criteria_number: "",
-    //   criteria_description: "",
-    //   requirements: {},
-    // };
-    // const mappingTxt = await this.askGPT(
-    //   `Given the policy statement as ${policyStatementText},` +
-    //     `give me a non-nested JSON object with all the attributes ` +
-    //     `for creteria required for evaluation of the policy that can be filled in the format of a form` +
-    //     `for the json you can follow this formatting` +
-    //     ` ${JSON.stringify(idealFormat)}`
-    // );
-    // const mapping = JSON.parse(mappingTxt);
-    // return mapping;
+    const jsontxt = await this.askGPT(
+      `Return a JSON mapping of cretierias which are medically necassary for the approval of policy\n` +
+        `Given the policy statement as ${policyStatementText}\n`
+    );
+    return JSON.parse(jsontxt);
   },
 
   async convertPAFormDataToJSON(paFormText) {

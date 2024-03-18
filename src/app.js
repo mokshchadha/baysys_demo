@@ -35,10 +35,10 @@ async function evalualtePolicy(data) {
   const paFormText = await PDFService.downloadAndReadPDF({ url: data.paForm });
   const filledForm = await GPT.fillFormForPatient(paFormText, data.EHR);
 
-  //   const stepByStepAnalysis = await GPT.comparePersonPolicyAndForm(
-  //     filledForm,
-  //     policyStatement
-  //   );
+  const stepByStepAnalysis = await GPT.comparePersonPolicyAndForm(
+    filledForm,
+    policyStatement
+  );
 
   const finalAnalysis = await GPT.isPolicyApplicableV2(
     filledForm,
@@ -49,6 +49,7 @@ async function evalualtePolicy(data) {
   return {
     myStatus: finalAnalysis.status,
     myReason: finalAnalysis.reason,
+    stepByStepAnalysis,
     correctStatus: data.caseStatus,
     reason: data.reasonForDecision,
   };

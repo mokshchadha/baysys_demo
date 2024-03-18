@@ -12,6 +12,7 @@ async function main() {
     try {
       const r = await evalualtePolicy(d);
       console.log(r);
+      await mongoDB.insertOne(mongoDB.collections.resultsCollection, r);
       results.push(r);
     } catch (error) {
       console.error("Error evalualtePolicy() at idx", i);
@@ -19,7 +20,7 @@ async function main() {
     }
   }
 
-  await mongoDB.storeResults(results);
+  // await mongoDB.storeResults(results);
   const matching = await results.filter(
     (e) => e.myStatus.toLowerCase() == e.correctStatus.toLowerCase()
   );
