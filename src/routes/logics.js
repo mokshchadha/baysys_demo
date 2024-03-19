@@ -103,7 +103,7 @@ async function getPolicyText(policy) {
   }
   if (text) policyText = text;
 
-  if (!text) throw "Invalid Policy, please add url or text";
+  if (!policyText) throw "Invalid Policy, please add url or text";
   return policyText;
 }
 

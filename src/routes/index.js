@@ -4,11 +4,12 @@ const handler = require("./handler");
 const {
   getPolicyStatementMapping,
   getRelationalExpression,
+  evaluatePolicyForEndUser,
 } = require("./logics");
 
-router.post("/evaluatePolicyForEndUser", (req, res) => {
-  res.status(200).send("Policy evaluated");
-});
+router.post("/evaluatePolicyForEndUser", (req, res) =>
+  handler(req, res, evaluatePolicyForEndUser)
+);
 
 router.post("/policyStatementMapping", (r, rs) =>
   handler(r, rs, getPolicyStatementMapping)

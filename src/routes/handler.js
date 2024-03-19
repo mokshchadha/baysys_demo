@@ -23,6 +23,7 @@ async function routeHandler(req, res, buisnessLogicFn) {
       return;
     }
     console.error(error);
+    console.error(error.stack);
     res
       .status(500)
       .json({ code: error, type: "undefined", msg: error.toString() })
