@@ -1,4 +1,4 @@
-# baysys_demo
+
 
 ## Project setup and quickstart guide
 
