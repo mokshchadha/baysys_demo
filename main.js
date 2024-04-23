@@ -1,23 +1,15 @@
-const { getFileData } = require("./src/data/FileData");
-const path = require("path");
+// const { getFileData } = require("./src/data/FileData");
+// const path = require("path");
 // const { evalualtePolicy } = require("./src/app");
 // const mongoDB = require("./src/repo/mongodb");
-const PDFService = require("./src/services/pdf/PdfService");
-const { getPolicyStatementMapping } = require("./src/routes/logics");
+// const PDFService = require("./src/services/pdf/PdfService");
+// const { getPolicyStatementMapping } = require("./src/routes/logics");
+const Gemini = require('./src/services/gemini/Gemini')
 
 async function main() {
-  const data = await getFileData();
-
-  for (let i = 0; i < data.length; i++) {
-    const d = data[i];
-    const uuid = crypto.randomUUID();
-    const fileName = `idx_${i}_paForm_${uuid}.pdf`;
-    const outputPath = path.join(__dirname + "/paFormsPdfs", fileName);
-    try {
-      await PDFService.downloadPDF(d.paForm, outputPath);
-    } catch (error) {
-      console.log("Could not load ", i);
-    }
+   const propmpt = 'introduce yourself?'
+   const resp =await Gemini.ask(propmpt)
+   console.log(resp)
   }
 
   // await mongoDB.emptyResults();
@@ -46,6 +38,6 @@ async function main() {
   //   (e) => e.myStatus.toLowerCase() == e.correctStatus.toLowerCase()
   // );
   // console.log({ total: results.length, matching: matching.length });
-}
+// }
 
 main(); // function call for main

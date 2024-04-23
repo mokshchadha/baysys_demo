@@ -3,6 +3,12 @@ const mongodb = require("../repo/mongodb");
 const PDF = require("../services/pdf/PdfService");
 const GPT = require("../services/gpt/ChatGpt");
 const bodyValidators = require("./validators");
+const Gemini = require("../services/gemini/Gemini")
+
+async function askGemini(req){
+  const text = req.body
+  return Gemini.ask(text)
+}
 
 async function evaluatePolicyForEndUser(req) {
   bodyValidators.evaluatePolicyForEndUser(req.body);
@@ -124,4 +130,5 @@ module.exports = {
   getPolicyStatementMapping,
   getRelationalExpression,
   evaluatePolicyForEndUser,
+  askGemini
 };
