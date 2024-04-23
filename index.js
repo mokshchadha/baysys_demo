@@ -13,6 +13,10 @@ app.use((rq, re, n) => authKeyMiddleWare(rq, re, n));
 
 app.use(routes);
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
