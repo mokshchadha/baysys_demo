@@ -5,6 +5,7 @@ const Configs = {
   dbUrl: process.env.MONGO_URL,
   dbName: process.env.DB_NAME,
   AUTH_KEY: process.env.AUTH_KEY,
+  geminiGPTKey: process.env.GEMINI_KEY,
 };
 
 module.exports = Configs;
