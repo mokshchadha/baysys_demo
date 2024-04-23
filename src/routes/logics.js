@@ -6,8 +6,8 @@ const bodyValidators = require("./validators");
 const Gemini = require("../services/gemini/Gemini")
 
 async function askGemini(req){
-  const text = req.body
-  return Gemini.ask(text)
+  const {text} = req.body
+  return {response : await  Gemini.ask(text)}
 }
 
 async function evaluatePolicyForEndUser(req) {
